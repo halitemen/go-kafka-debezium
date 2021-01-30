@@ -1,0 +1,31 @@
+#Set Topic
+
+kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning --topic mysqlServer.mysqldb.sensor --group localgroup --property print.key=true --property key.separator="-"
+
+#Set Connector Settings
+
+{
+  "name": "mysql-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "root",
+    "database.password": "root",
+    "database.server.id": "1",
+    "database.server.name": "mysqlServer",
+    "database.include.list": "mysqldb",
+    "database.history.kafka.bootstrap.servers": "kafka:29092",
+    "database.history.kafka.topic": "schema-changes.mysqldb",
+    "table.whitelist": "mysqldb.sensor",
+    "include.schema.changes": "false"
+  }
+}
+
+#Execute Command Mysql
+
+use mysqldb;
+Create Table Sensor (id int auto_increment primary key , mac varchar(50),receivedDate datetime);
+
+INSERT INTO Sensor (mac, receiveddate) VALUES ('100201','2021-01-30 10:43:30')
